@@ -13,11 +13,9 @@
 <% long beginPageLoadTime=System.currentTimeMillis();%>
 <%@ page isELIgnored="false" %>
 <!--
-THE REASON THIS UTILITY WAS WRITTEN USING SCRIPLET AND NOT TAGS OR UTILS
-WAS EASE OF INSTALLATION AND CONFIGURATION WAS THE HIGHEST PRIORITY ALONG
-WITH THE LEAST NUMBER OF DEPENDANCIES.  THE ONLY THING THIS ADMIN UTILITY
-REQUIRES IS A JSP ENGINE AND LOG4J.  NO CONFIGURATION IS REQUIRED EXCEPT
-DROPPING IN THE JSP PAGE AND INVOKING IT THROUGH A STANDARD WEB BROWSER.
+Note: Place this file in the root of your expanded project.
+      Assuming tomcatrunner
+      stations/stationName/dragon.tomcat/webapps/turtle/log4j2Admin.jsp
 
 Originally written by Mike Amend, BEA Systems.
 Adapted for Log4j2 by Henning Spjelkavik
@@ -121,7 +119,7 @@ Adapted for production by Rick Fencl
                 <body onLoad='javascript:document.logFilterForm.logNameFilter.focus();'>
 
                     <%                     
-                        String[] logLevels={ "debug" , "info" , "warn" , "error" , "fatal" , "off" }; 
+                        String[] logLevels={ "trace", "debug" , "info" , "warn" , "error" , "fatal" , "off" }; 
                         String targetOperation=(String)request.getParameter("operation"); String
                         targetLogger=(String)request.getParameter("logger"); 
                         String targetLogLevel=(String)request.getParameter("newLogLevel"); 
@@ -144,12 +142,17 @@ Adapted for production by Rick Fencl
                                 logContext.updateLoggers();
                             } 
                             else if("SetAll".equals(logLevelAction)) {
-                                logger.setLevel(Level.toLevel(selectedLevel));
+                              if (lognameFilter.length()!=0) {
+                                if (logger.getName().contains(lognameFilter)) {
+                                  logger.setLevel(Level.toLevel(selectedLevel));
+                                }
+                              } else {
+                                  logger.setLevel(Level.toLevel(selectedLevel));
+                              }
                             }
                             else if(isSaveDefaultLevels) {
                                 defaults.put(logger.getName(), String.valueOf(logger.getLevel()));
                             }
-                        
                             else if("Reset".equals(restore)) {
                                 logger.setLevel(Level.toLevel(defaults.get(logger)));
                             }
@@ -183,7 +186,7 @@ Adapted for production by Rick Fencl
                             <table cellspacing="1">
                                 <tr>
                                     <th width="25%">Logger</th>
-                                    <th width="25%">Parent Logger</th>
+                                    <th width="15%">Parent Logger</th>
                                     <th width="15%">Effective Level</th>
                                     <th width="35%">Change Log Level To</th>
                                 </tr>
@@ -213,7 +216,7 @@ Adapted for production by Rick Fencl
                         StringBuffer args = new StringBuffer();
                         args.append("operation=changeLogLevel&logger=" + loggerName);
                         args.append("&newLogLevel=" + logLevels[cnt]);
-                        //args.append("&template=templates/blanktemplate.jsp");
+                        args.append("&logNameFilter=" + lognameFilter);
 
                         if(logger.getLevel() == Level.getLevel(logLevels[cnt].toUpperCase()) )
                         {
