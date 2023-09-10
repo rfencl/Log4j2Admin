@@ -21,8 +21,8 @@ DROPPING IN THE JSP PAGE AND INVOKING IT THROUGH A STANDARD WEB BROWSER.
 
 Originally written by Mike Amend, BEA Systems.
 Adapted for Log4j2 by Henning Spjelkavik
-Adapted 
-    -->
+Adapted for production by Rick Fencl
+-->
     <%!
         Map<String, String> defaults = new HashMap<String, String>();
         String[] keys;
