@@ -237,17 +237,14 @@ Adapted
             </table>
 
     <h2>            Page Load Time (Millis): <%=(System.currentTimeMillis() - beginPageLoadTime)%>          </h2>
-        <h2>            Parameters: 
               <%
                      for (String key : pkeys) {
               %>
-                   [<%=(key.toString())%>&nbsp;=
-                   <%=((String) request.getParameter(key)).toString() %>]
+
+                <script> console.log('[<%=(key.toString())%> = <%=((String) request.getParameter(key)).toString() %>]')</script>
               <%
                      }
               %>
-    
-      </h2>
 
                         </div>
                 </body>
